@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 parser = argparse.ArgumentParser(description='Downloads all PDFs from a website.')
 parser.add_argument("url", help="A valid URL, e.g. https://aaaaa.com/the/website/path")
-parser.add_argument("-f", "--force", action="store_true", help="Force download (without asking).")
+parser.add_argument("-f", "--force", action="store_true", help="force download (without asking).")
 args = parser.parse_args()
 
 URL = args.url
@@ -23,10 +23,7 @@ except requests.exceptions.ConnectionError as e:
 	print(e)
 	exit()
 
-text = r.text
-
-
-	
+text = r.text	
 
 soup = BeautifulSoup(text, features="html.parser")
 for link in soup.findAll('a', attrs={'href': re.compile("\.pdf")}): # Add other extensions here
@@ -39,6 +36,8 @@ for link in soup.findAll('a', attrs={'href': re.compile("\.pdf")}): # Add other 
     	while ans not in ["yes", "no"]:
     		ans = input(f"Download '{fname}'? ")
     	if ans == "no": continue
+    else:
+    	print(f"Downloading into current directory: '{fname}'")
     try:
         urllib.request.urlretrieve(link, fname)
     except Exception as e:
